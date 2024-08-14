@@ -29,3 +29,7 @@ C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\refi
 C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\BlazorApp.pdb
 C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\BlazorApp.genruntimeconfig.cache
 C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\ref\BlazorApp.dll
+C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\BlazorApp.csproj.AssemblyReference.cache
+C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\BlazorApp.sourcelink.json
+C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\bin\Debug\net7.0\YamlDotNet.dll
+C:\Users\ponti\OneDrive\Documents\.NET\PokeDaily\BlazorApp\obj\Debug\net7.0\BlazorApp.csproj.Up2Date

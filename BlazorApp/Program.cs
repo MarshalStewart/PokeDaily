@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Components.Web;
 using BlazorApp.Data;
 
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<PokemonService>();
+
 
 var app = builder.Build();
 
