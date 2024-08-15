@@ -1,0 +1,46 @@
+﻿@page "/fetchdata"
+@using BlazorApp.Data
+@* @inject WeatherForecastService ForecastService *@
+@inject PokemonService PokeService
+
+<PageTitle>All Pokemon</PageTitle>
+
+<h1>All Pokemon</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (pokemons == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>National</th>
+                <th>Gen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var poke in pokemons)
+            {
+                <tr>
+                    <td>@poke.Name</td>
+                    <td>@poke.National</td>
+                    <td>@poke.Gen</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Pokemon[]? pokemons;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pokemons = await PokeService.GetAllPokemon();
+    }
+}
