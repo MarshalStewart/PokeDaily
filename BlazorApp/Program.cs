@@ -11,7 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<PokemonService>();
+builder.Services.AddSingleton<PokemonFormsService>();
+builder.Services.AddSingleton<PokemonTypesService>();
 
+
+        string filename = @"database/data/pokemon-forms.yaml";
+        var yml = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), filename));
+
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)  // Ensure correct naming convention
+            .Build();
+
+        using (var reader = new StringReader(yml))
+        {
+            var x =  deserializer.Deserialize<Dictionary<string, PokemonForms>>(reader);
+        }
 
 var app = builder.Build();
 

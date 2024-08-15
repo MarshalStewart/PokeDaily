@@ -66,3 +66,210 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+    .sub-grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+
+    .sub-grid-container-small {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Defines a grid with 6 equal columns */
+        gap: 0.1rem; /* Space between grid items */
+        max-width: 1200px; /* Set your desired maximum width here */
+        margin: 0 auto; /* Centers the grid container horizontally */
+        width: 100%; /* Ensure the grid takes up the full width available up to the max-width */
+        padding: 0 1rem; /* Optional padding to ensure some space on the sides */
+        box-sizing: border-box; /* Includes padding and border in the element's total width */
+    }
+
+        /* Container setup */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns, each 50% width */
+            gap: 10px; /* Space between grid items */
+            /* height: 100vh; Full viewport height */
+        }
+
+        /* Box styling */
+        .box {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            background-color: lightcoral;
+            grid-template-columns: repeat(6, 1fr); /* Two columns, each 50% width */
+            color: white;
+            font-size: 2em; /* Adjust font size for readability */
+            text-align: center;
+            vertical-align: middle;
+            border: 2px solid #333;
+            border-radius: 8px; /* Optional: rounded corners */
+        }
+
+
+    /* Optional: Make the boxes responsive */
+    @media (max-width: 600px) {
+        .grid-container {
+            grid-template-columns: 1fr; /* Single column on smaller screens */
+        }
+    }
+    
+    .grid-item {
+        border: 1px solid #ddd;
+        border-radius: 4px; /* Slightly smaller border radius */
+        padding: 0.5rem; /* Reduced padding */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        text-align: center;
+        vertical-align: middle;
+        font-size: 0.875rem; /* Slightly smaller font size */
+        color: #fff; /* Text color */
+        text-shadow: 0 0 3px #000, 0 0 5px #000; /* Black shadow to enhance white outline */
+        box-sizing: border-box;
+    }
+
+    .grid-item-small {
+        border: 1px solid #000000;
+        border-radius: 1px; /* Slightly smaller border radius */
+        padding: 0.5rem; /* Reduced padding */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        text-align: center;
+        vertical-align: middle;
+        font-size: 0.875rem; /* Slightly smaller font size */
+        color: #000000; /* Text color */
+        box-sizing: border-box;
+    }
+
+    .grid-item-correct {
+        border: 1px solid #ddd;
+        border-radius: 4px; /* Slightly smaller border radius */
+        padding: 0.5rem; /* Reduced padding */
+        text-align: center;
+        font-size: 0.875rem; /* Slightly smaller font size */
+        color: #b4ab24; /* Text color */
+        background-color: #eaeec3; /* Text color */
+        text-shadow: 0 0 3px #000, 0 0 5px #000; /* Black shadow to enhance white outline */
+        font-weight: bold;
+    }
+
+    .grid-item-small-correct {
+        border: 1px solid #ddd;
+        border-radius: 1px; /* Slightly smaller border radius */
+        padding: 0.5rem; /* Reduced padding */
+        text-align: center;
+        font-size: 0.875rem; /* Slightly smaller font size */
+        color: #b4ab24; /* Text color */
+        background-color: #eaeec3; /* Text color */
+        text-shadow: 0 0 3px #000, 0 0 5px #000; /* Black shadow to enhance white outline */
+        font-weight: bold;
+    }
+
+    .custom-cell {
+        background-color: #e2e06b;
+        color: #333;
+        /* padding: 15px; */
+        text-align: center;
+        /* border: 1px solid #ddd; */
+        /* font-weight: bold; */
+        border-radius: 5px;
+    }
+
+    .heading {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .table {
+        width: 100%; /* Optional: makes the table full width */
+        border-collapse: collapse; /* Optional: collapses table borders */
+        margin-bottom: 2rem; /* Adjust the value as needed for spacing */
+    }
+    
+    .table th, .table td {
+        border: 1px solid #ddd; /* Optional: adds borders to table cells */
+        padding: 0.5rem; /* Optional: adds padding inside table cells */
+        text-align: left; /* Optional: aligns text to the left */
+    }
+
+/* Define colors for each Pokemon type */
+.type-normal {
+    background-color: #aaa6a6; /* Fire type color */
+}
+
+.type-fire {
+    background-color: #f08030; /* Fire type color */
+}
+
+.type-water {
+    background-color: #6890f0; /* Water type color */
+}
+
+.type-electric {
+    background-color: #f8d030; /* Electric type color */
+}
+
+.type-grass {
+    background-color: #78c850; /* Grass type color */
+}
+
+.type-ice {
+    background-color: #25b5ce; /* Psychic type color */
+}
+
+.type-fighting {
+    background-color: #a16929; /* Psychic type color */
+}
+
+.type-poison {
+    background-color: #8529a1; /* Psychic type color */
+}
+
+.type-ground {
+    background-color: #9b8253; /* Psychic type color */
+}
+
+.type-flying {
+    background-color: #a3ebe5; /* Psychic type color */
+}
+
+.type-psychic {
+    background-color: #f85888; /* Psychic type color */
+}
+
+.type-bug {
+    background-color: #8ddf8a; /* Psychic type color */
+}
+
+.type-rock {
+    background-color: #573305; /* Psychic type color */
+}
+
+.type-ghost {
+    background-color: #2d054e; /* Psychic type color */
+}
+
+.type-dragon {
+    background-color: #1208a0; /* Psychic type color */
+}
+
+.type-dark {
+    background-color: #030303; /* Psychic type color */
+}
+
+.type-steel {
+    background-color: #353535; /* Psychic type color */
+}
+
+.type-fairy {
+    background-color: #ff00c870; /* Psychic type color */
+}
+
+.type-default {
+    background-color: #ccc; /* Default background color */
+}
+
+.type-guessed {
+    background-color: #383838; /* Default background color */
+}

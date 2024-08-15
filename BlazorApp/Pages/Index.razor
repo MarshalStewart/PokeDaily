@@ -1,9 +1,312 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using BlazorApp.Data
+@inject PokemonService PokeService
+@inject PokemonFormsService PokeFormsService
+@inject PokemonTypesService TypesService
 
-<h1>Hello, world!</h1>
+<PageTitle>Pokemon Wordle</PageTitle>
 
-Welcome to your new app.
+<h1 class="heading">Pokemon Wordle</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<p>Guess the random pokemon! Changes daily, resets if you refresh. Currently type and generation are visible, more configurability and stats displayed to come.</p>
+
+@if (randPoke is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @* <p>Cheating: @randPoke.Name</p> *@
+    <p>@displayText</p>
+
+    <input type="text" @bind="userInput" placeholder="Type here" />
+    <button class="btn btn-primary" @onclick="ChangeText">Submit</button>
+
+    <div class="grid-container">
+    <h2 class="heading">Remaining Pokemon Types</h2>
+    <h2 class="heading">Remaining Pokemon Generations</h2>
+    </div>
+    <div class="grid-container">
+    <div class="sub-grid-container">
+        @if (typesList is not null && typesList.Any())
+        {
+            @foreach (var types in typesList)
+            {
+                @if (types is not null)
+                {
+                    @if (types.Name is not null)
+                    {
+                        @if (randPokeForms is null || pokeFormsList is null)
+                        {
+                            <div class="grid-item @GetTypeClass(types.Name)">
+                                <strong>@types.Name</strong>
+                            </div>
+                        }
+                        // User has guessed this type
+                        else if (pokeFormsList.Any(f => 
+                            AreStringsEqualCaseInsensitive(f.Type1, types.Name) ||
+                            AreStringsEqualCaseInsensitive(f.Type2, types.Name) ))
+                        {
+                            // User has guessed the correct type of the random pokemone
+                            @if (AreStringsEqualCaseInsensitive(randPokeForms.Type1, types.Name) ||
+                                AreStringsEqualCaseInsensitive(randPokeForms.Type2, types.Name))
+                            {
+                                <div class="grid-item-correct">
+                                    <strong>@types.Name</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                <td colspan="1"></td> 
+                            }
+                        }
+                        else
+                        {
+                            <div class="grid-item @GetTypeClass(types.Name)">
+                                <strong>@types.Name</strong>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>Unknown Type</p>
+                }
+            }
+        }
+        else
+        {
+            <p>No types available</p>
+        }
+    </div>
+
+    <div class="table">
+        @foreach (var gen in generations)
+        {
+            @if (randPokeForms is null || pokeFormsList is null)
+            {
+                <div class="grid-item-small">
+                    <strong>@gen</strong>
+                </div>
+            }
+            // User has guessed this gen
+            else if (pokeFormsList.Any(f => f.Gen == gen))
+            {
+                // User has guessed the correct type of the random pokemone
+                @if (randPokeForms.Gen == gen)
+                {
+                    <div class="grid-item-small-correct">
+                        <strong>@gen</strong>
+                    </div>
+                }
+                else
+                {
+                    <td colspan="1"></td> 
+                }
+            }
+            else
+            {
+                <div class="grid-item-small">
+                    <strong>@gen</strong>
+                </div>
+            }
+        }
+  
+    </div>
+    </div>
+
+    // TODO: add toggles for what settings should be displayed, this is way later
+
+    // TODO: add more stats with varying colors if they are acurate or not
+
+    <h2 class="heading">Guessed Pokemon</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Guess Number</th>
+                <th>Name</th>
+                <th>National</th>
+                <th>Gen</th>
+                <th>Type 1</th>
+                <th>Type 2</th>
+                <th>Type 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (pokeList is not null && pokeFormsList is not null)
+            {
+                @for (int i = 0; i < pokeList.Count; i++)
+                {
+                   // Ensure we don't access out of bounds of pokeFormsList
+                    bool isFormValid = i < pokeFormsList.Count && pokeFormsList[i] is not null;
+                    <tr>
+                        <td>@i</td>
+                        <td>@pokeList[i].Name</td>
+                        <td>@pokeList[i].National</td>
+                        <td>@pokeList[i].Gen</td>
+                        @if (isFormValid) {
+                            // if correct make green
+                            <td>@pokeFormsList[i].Type1</td>
+                            <td>@pokeFormsList[i].Type2</td>
+                        }
+                        else
+                        {
+                            <td colspan="2">No data</td> <!-- Fallback in case of invalid form data -->
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Pokemon>? pokeList;
+    private List<PokemonForms>? pokeFormsList;
+    private PokemonTypes[]? typesList;
+    private Pokemon? randPoke;
+    private PokemonForms? randPokeForms;
+    private const int maxCount = 6;
+    private int? currentCount;
+    private string displayText = "You have 6 guesses.";
+    private string userInput = string.Empty;
+    private string storedInput = string.Empty;
+
+    private static readonly int[] generations = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    private bool won = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentCount = 0;
+        randPoke = await PokeService.GetRandomPokemon();
+
+        /* Additional detailed stats */
+        if (randPoke.Name is not null)
+        {
+            randPokeForms = await PokeFormsService.GetPokemonForm(randPoke.Name);
+        }
+
+        typesList = await TypesService.GetAllTypes();
+    }
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    static bool AreStringsEqualCaseInsensitive(string? str1, string str2)
+    {
+        // Handle case where str1 is null
+        if (str1 is null)
+        {
+            return str2 is null;  // Only true if str2 is also null
+        }
+
+        return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private string GetTypeClass(string typeName)
+    {
+        return typeName.ToLower() switch
+        {
+            "normal" => "type-normal",
+            "fire" => "type-fire",
+            "water" => "type-water",
+            "electric" => "type-electric",
+            "grass" => "type-grass",
+            "ice" => "type-ice",
+            "fighting" => "type-fighting",
+            "poison" => "type-poison",
+            "ground" => "type-ground",
+            "flying" => "type-flying",
+            "psychic" => "type-psychic",
+            "bug" => "type-bug",
+            "rock" => "type-rock",
+            "ghost" => "type-ghost",
+            "dragon" => "type-dragon",
+            "dark" => "type-dark",
+            "steel" => "type-steel",
+            "fairy" => "type-fairy",
+            _ => "type-default" // Optional: default class if type is unknown
+        };
+    }
+
+    private async void ChangeText()
+    {
+        // store the user input guess
+        storedInput = userInput;
+        userInput = string.Empty; // Optionally clear the input box after storing
+
+        if (randPoke is null){
+            displayText = $"There was a problem getting the random pokemon.";
+            return;
+        }
+
+        if (won)
+        {
+            // update the text box on the submit, but they already won and need to refresh
+            return;
+        }
+
+        // check if pokemon is valid, if not tell the user and don't increment the guess counter
+        var guessPoke = await PokeService.CheckIfPokemonValid(storedInput);
+        if (guessPoke is not null) {
+
+            // add guessPoke to list
+            if (pokeList is null){
+                pokeList = new List<Pokemon>();
+            }
+
+            if (pokeFormsList is null){
+                pokeFormsList = new List<PokemonForms>();
+            }
+
+            // check if we already guessed that pokemon
+            if (pokeList.Contains(guessPoke))
+            {
+                displayText = $"You already guessed: {guessPoke.Name}.";
+                return;
+            }
+
+            currentCount++;
+
+            pokeList.Add(guessPoke);
+
+            /* Additional detailed stats */
+            var form = await PokeFormsService.GetPokemonForm(storedInput);
+            if (form is not null){
+                pokeFormsList.Add(form);
+            }
+
+            // randPoke can't be null here
+            if (guessPoke.Name == randPoke.Name)
+            {
+                displayText = $"You got the pokemon correct!!!";
+                won = true;
+            }
+            else 
+            {
+                // Change text based on the number of clicks
+                if (currentCount == 0) {
+                    // do nothing
+                }
+                else if (currentCount < maxCount)
+                {
+                    displayText = $"You've clicked {currentCount} times. You have {maxCount - currentCount} tries left.";
+                }
+                else
+                {
+                    displayText = $"Oh no you didn't get it!!! Refresh to try again.";
+                }
+
+                // TODO: Check the accuracy of the guess
+
+            }
+        }
+        else {
+            displayText = $"Pokemon isn't valid!!! Try again.";
+        }
+    }
+}
+
