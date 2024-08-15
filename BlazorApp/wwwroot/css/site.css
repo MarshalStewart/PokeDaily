@@ -193,6 +193,18 @@ a, .btn-link {
         text-align: left; /* Optional: aligns text to the left */
     }
 
+    .correct-td {
+        color: #e2e06b;
+    }
+
+    .higher-td {
+        color: #29cc13;
+    }
+
+    .lower-td {
+        color: #af2020;
+    }
+
 /* Define colors for each Pokemon type */
 .type-normal {
     background-color: #aaa6a6; /* Fire type color */

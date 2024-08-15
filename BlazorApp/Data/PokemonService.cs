@@ -64,17 +64,13 @@ public class PokemonService
         return Task.FromResult<Pokemon[]?>(pokemonDict.Values.ToArray());
     }
 
-    public Task<Pokemon> GetRandomPokemon()
+    public Task<Pokemon> GetDailyRandomPokemon()
     {
-
-        // Migrate to a new service for pokemon form class, change the random number to be calculated based on the current date so it doesn't change. Add a class to handle the current gueses? don't need something to handle refresh so if you refresh you lose all progress. a nice to have would be the predictive search, but don't need that. in js handle the number of guesses someone has inputed, and handle the comparison to the stats, so we would need to add a service for the query from the users guess to return the form for that pokemon. For this one I would like the option to checkbox what settings are available on the daily wordle, the one on squidle doesn't have good options for configuring that. 
-
         if (!init) {
             initDict(); // populates pokemonDict
         }
 
-        // Convert dictionary to a list for indexed access
-        var pokemonList = pokemonDict.ToList();
+        // TODO: add ability to specify which generations
 
         // Get today's date
         DateTime today = DateTime.Now;
@@ -86,7 +82,22 @@ public class PokemonService
         Random random = new Random(seed);
 
         // Get a random integer
-        int randIndex = random.Next(1, pokemonDict.Count); // Random integer between 1 and 99
+        int randIndex = random.Next(1, pokemonDict.Count);
+
+        return Task.FromResult(pokemonDict.Values.ToArray()[randIndex]);
+    }
+
+    public Task<Pokemon> GetRandomPokemon()
+    {
+        if (!init) {
+            initDict(); // populates pokemonDict
+        }
+
+        // Create a Random object with the seed value
+        Random random = new Random();
+
+        // Get a random integer
+        int randIndex = random.Next(1, pokemonDict.Count);
 
         return Task.FromResult(pokemonDict.Values.ToArray()[randIndex]);
     }

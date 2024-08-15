@@ -23,6 +23,15 @@ else
     <input type="text" @bind="userInput" placeholder="Type here" />
     <button class="btn btn-primary" @onclick="ChangeText">Submit</button>
 
+    <div>
+    <p>Configuration</p>
+    <button class="btn btn-primary" @onclick="RandomizePokemon">Re-Randomize</button>
+
+    @* TODO: add element to modify the number of guesses *@
+    @* TODO: make configuration collaspable *@
+
+    </div>
+
     <div class="grid-container">
     <h2 class="heading">Remaining Pokemon Types</h2>
     <h2 class="heading">Remaining Pokemon Generations</h2>
@@ -124,13 +133,18 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Guess Number</th>
+                <th>Guess</th>
                 <th>Name</th>
                 <th>National</th>
                 <th>Gen</th>
                 <th>Type 1</th>
                 <th>Type 2</th>
-                <th>Type 2</th>
+                <th>Hp</th>
+                <th>Attack</th>
+                <th>Defense</th>
+                <th>SpAtk</th>
+                <th>SpDef</th>
+                <th>Speed</th>
             </tr>
         </thead>
         <tbody>
@@ -141,22 +155,125 @@ else
                    // Ensure we don't access out of bounds of pokeFormsList
                     bool isFormValid = i < pokeFormsList.Count && pokeFormsList[i] is not null;
                     <tr>
-                        <td>@i</td>
+                        <td>@(i+1)</td>
                         <td>@pokeList[i].Name</td>
                         <td>@pokeList[i].National</td>
                         <td>@pokeList[i].Gen</td>
                         @if (isFormValid) {
-                            // if correct make green
+                            // TODO: if correct make green
                             <td>@pokeFormsList[i].Type1</td>
                             <td>@pokeFormsList[i].Type2</td>
+                            @if (pokeFormsList[i].Stats is not null)
+                            {
+                                @if (randPokeForms.Stats.Hp > pokeFormsList[i].Stats.Hp)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.Hp} <")</td>
+                                }
+                                else if (randPokeForms.Stats.Hp < pokeFormsList[i].Stats.Hp)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.Hp} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.Hp} =")</td>
+                                }
+
+                                @if (randPokeForms.Stats.Attack > pokeFormsList[i].Stats.Attack)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.Attack} <")</td>
+                                }
+                                else if (randPokeForms.Stats.Attack < pokeFormsList[i].Stats.Attack)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.Attack} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.Attack} =")</td>
+                                }
+
+                                @if (randPokeForms.Stats.Defense > pokeFormsList[i].Stats.Defense)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.Defense} <")</td>
+                                }
+                                else if (randPokeForms.Stats.Defense < pokeFormsList[i].Stats.Defense)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.Defense} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.Defense} =")</td>
+                                }
+
+                                @if (randPokeForms.Stats.SpAtk > pokeFormsList[i].Stats.SpAtk)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.SpAtk} <")</td>
+                                }
+                                else if (randPokeForms.Stats.SpAtk < pokeFormsList[i].Stats.SpAtk)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.SpAtk} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.SpAtk} =")</td>
+                                }
+
+                                @if (randPokeForms.Stats.SpDef > pokeFormsList[i].Stats.SpDef)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.SpAtk} <")</td>
+                                }
+                                else if (randPokeForms.Stats.SpDef < pokeFormsList[i].Stats.SpDef)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.SpDef} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.SpDef} =")</td>
+                                }
+
+                                @if (randPokeForms.Stats.Speed > pokeFormsList[i].Stats.Speed)
+                                {
+                                    <td class="higher-td">@($"{pokeFormsList[i].Stats.SpAtk} <")</td>
+                                }
+                                else if (randPokeForms.Stats.Speed < pokeFormsList[i].Stats.Speed)
+                                {
+                                    <td class="lower-td">@($"{pokeFormsList[i].Stats.Speed} >")</td>
+                                }
+                                else
+                                {
+                                    <td class="correct-td">@($"{pokeFormsList[i].Stats.Speed} =")</td>
+                                }
+
+                            }
+                            else
+                            {
+                                <td colspan="2">No data</td>
+                            }
                         }
                         else
                         {
-                            <td colspan="2">No data</td> <!-- Fallback in case of invalid form data -->
+                            <td colspan="2">No data</td>
                         }
                     </tr>
                 }
             }
+
+            @if (currentCount >= maxCount && !won) {
+                <tr>
+                    <td>Answer</td>
+                    <td>@randPoke.Name</td>
+                    <td>@randPoke.National</td>
+                    <td>@randPoke.Gen</td>
+                    <td>@randPokeForms.Type1</td>
+                    <td>@randPokeForms.Type2</td>
+                    <td>@randPokeForms.Stats.Hp</td>
+                    <td>@randPokeForms.Stats.Attack</td>
+                    <td>@randPokeForms.Stats.Defense</td>
+                    <td>@randPokeForms.Stats.SpAtk</td>
+                    <td>@randPokeForms.Stats.SpDef</td>
+                    <td>@randPokeForms.Stats.Speed</td>
+                </tr>
+            }
+
         </tbody>
     </table>
 }
@@ -180,7 +297,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         currentCount = 0;
-        randPoke = await PokeService.GetRandomPokemon();
+        randPoke = await PokeService.GetDailyRandomPokemon();
 
         /* Additional detailed stats */
         if (randPoke.Name is not null)
@@ -189,6 +306,29 @@ else
         }
 
         typesList = await TypesService.GetAllTypes();
+    }
+
+    private async void RandomizePokemon()
+    {
+        // reset entire game 
+
+        currentCount = 0;
+        won = false;
+        randPoke = await PokeService.GetRandomPokemon();
+
+        /* Additional detailed stats */
+        if (randPoke.Name is not null)
+        {
+            randPokeForms = await PokeFormsService.GetPokemonForm(randPoke.Name);
+        }
+
+        pokeList = new List<Pokemon>();
+        pokeFormsList = new List<PokemonForms>();
+
+        typesList = await TypesService.GetAllTypes();
+
+        displayText = $"Re-randomized! You know have {maxCount} guesses. Good luck!";
+
     }
     private void IncrementCount()
     {
@@ -282,7 +422,7 @@ else
             // randPoke can't be null here
             if (guessPoke.Name == randPoke.Name)
             {
-                displayText = $"You got the pokemon correct!!!";
+                displayText = $"Correct! The pokemon was {randPoke.Name}, and you got it in {currentCount} guesses!";
                 won = true;
             }
             else 
@@ -297,7 +437,7 @@ else
                 }
                 else
                 {
-                    displayText = $"Oh no you didn't get it!!! Refresh to try again.";
+                    displayText = $"Nice Try! The answer was {randPoke.Name}";
                 }
 
                 // TODO: Check the accuracy of the guess
